@@ -1,0 +1,16 @@
+# Minimal requirements to RUN the app (no training/jupyter stuff)
+# Install PyTorch CPU-only (much smaller ~200MB vs ~2GB for GPU version)
+--index-url https://download.pytorch.org/whl/cpu
+torch==2.4.0+cpu
+torchvision==0.19.0+cpu
+
+# API server
+fastapi==0.110.0
+uvicorn[standard]==0.27.0
+python-multipart==0.0.9
+
+# Image processing
+pillow>=10.0.0
+
+# Numpy (needed by torch)
+numpy==1.26.4

@@ -1,0 +1,51 @@
+# ----------------------------------------------------------------------------
+# .gitignore for Pneumonia Detector Project
+# ----------------------------------------------------------------------------
+
+# Python / Backend
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node / Frontend
+pneumonia-detector/frontend/node_modules/
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pneumonia-detector/frontend/dist/
+pneumonia-detector/frontend/build/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# OS / Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ----------------------------------------------------------------------------
+# EXPLICITLY ALLOWED (Do not ignore these!)
+# ----------------------------------------------------------------------------
+# We MUST track the xray images directory as requested
+!xray images/
+!xray images/**
+
+# Ensure the model weights are pushed so the app works for anyone who clones it
+!pneumonia-detector/app/best_model.pth
