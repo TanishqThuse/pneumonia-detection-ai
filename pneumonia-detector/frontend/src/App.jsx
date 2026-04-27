@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import './index.css';
 import Chatbot from './Chatbot';
 import DiagnoseResult from './DiagnoseResult';
+import RiskSurvey from './RiskSurvey';
 
 const API = 'http://localhost:8000';
 
@@ -35,12 +36,12 @@ function Navbar({ onNav, page }) {
           WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>PneumoAI</span>
       </button>
       <div style={{ display:'flex', gap:6, alignItems:'center' }}>
-        {[['landing','Home'],['diagnose','Diagnose']].map(([p, label]) => (
+        {[['landing','🏠 Home'],['diagnose','🔬 Diagnose'],['risk','🩺 Risk & Medicines']].map(([p, label]) => (
           <button key={p} onClick={() => onNav(p)} style={{
             padding:'7px 16px', borderRadius:8, border:'none', cursor:'pointer',
             background: page===p ? 'rgba(0,212,255,0.12)' : 'transparent',
             color: page===p ? '#00d4ff' : 'rgba(255,255,255,0.5)',
-            fontWeight:600, fontSize:13, transition:'all 0.2s' }}>
+            fontWeight:600, fontSize:13, transition:'all 0.2s', whiteSpace:'nowrap' }}>
             {label}
           </button>
         ))}
@@ -314,9 +315,9 @@ export default function App() {
     <div style={{ minHeight:'100vh', background:'var(--bg)' }}>
       <Orbs/>
       <Navbar onNav={setPage} page={page}/>
-      {page === 'landing'
-        ? <LandingPage  onStart={() => setPage('diagnose')}/>
-        : <DiagnosePage onResultChange={setResult}/>}
+      {page === 'landing'  && <LandingPage  onStart={() => setPage('diagnose')}/>}
+      {page === 'diagnose' && <DiagnosePage onResultChange={setResult}/>}
+      {page === 'risk'     && <RiskSurvey   lastPrediction={result?.prediction}/>}
       <Chatbot result={result}/>
     </div>
   );

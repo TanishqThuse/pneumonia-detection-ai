@@ -97,6 +97,27 @@ export default function DiagnoseResult({ result }) {
         );
       })}
 
+      {/* ── Grad-CAM Heatmap ── */}
+      {result.gradcam && (
+        <div style={{ marginTop:22, padding:'18px 20px', borderRadius:14,
+          background:'rgba(124,58,237,0.07)', border:'1px solid rgba(124,58,237,0.25)' }}>
+          <div style={{ fontWeight:700, color:'#a78bfa', marginBottom:12, fontSize:15 }}>
+            🔥 Grad-CAM Explainability Heatmap
+          </div>
+          <p style={{ fontSize:13, color:'rgba(255,255,255,0.55)', lineHeight:1.7, marginBottom:14 }}>
+            The heatmap shows <strong style={{color:'#ef4444'}}>red/warm areas</strong> where the DenseNet-121 model
+            focused most when making its decision. In pneumonia cases, these typically highlight regions of
+            lung consolidation or fluid accumulation.
+          </p>
+          <img src={result.gradcam} alt="Grad-CAM heatmap"
+            style={{ width:'100%', borderRadius:12, objectFit:'contain', border:'1px solid rgba(255,255,255,0.1)' }}/>
+          <p style={{ fontSize:11, color:'rgba(255,255,255,0.3)', marginTop:10, lineHeight:1.6 }}>
+            Generated using Gradient-weighted Class Activation Mapping (Grad-CAM) on the final DenseBlock of DenseNet-121.
+            Colours: 🔴 Red = high activation · 🔵 Blue = low activation.
+          </p>
+        </div>
+      )}
+
       {/* AI Insights */}
       <div style={{ marginTop:22, padding:'18px 20px', borderRadius:14,
         background:'rgba(0,212,255,0.05)', border:'1px solid rgba(0,212,255,0.15)' }}>

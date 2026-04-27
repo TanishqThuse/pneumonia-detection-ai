@@ -14,3 +14,6 @@ pillow>=10.0.0
 
 # Numpy (needed by torch)
 numpy==1.26.4
+
+# Grad-CAM heatmap generation
+opencv-python-headless==4.9.0.80
