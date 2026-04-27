@@ -1,0 +1,18 @@
+PNEUMOAI — X-RAY ANALYSIS REPORT
+================================
+Prediction:  NORMAL
+Confidence:  66.97%
+NORMAL:      66.97%
+PNEUMONIA:   33.03%
+
+AI INSIGHTS:
+1. 🟢 Lung fields appear clear — no consolidation or infiltrates detected (66.97% confidence)
+2. 📊 NORMAL probability: 66.97% — well above the 45% PNEUMONIA threshold
+3. 🧠 DenseNet-121 found no abnormal density patterns across 121 dense convolutional layers
+4. ⚙️ Post-calibration: Temperature scaling (T=2.5) confirmed low pneumonia signal in logits
+5. 🫁 Air bronchograms and pleural spaces appear within expected normal radiographic range
+6. ✅ Continue preventive care: annual flu vaccine, avoid smoking, maintain good hand hygiene
+7. ⚠️ If symptoms persist (fever, cough, breathlessness), consult a physician regardless of this result
+
+DISCLAIMER: For educational purposes only. Not a medical diagnosis.
+Generated: 4/27/2026, 4:13:44 PM
