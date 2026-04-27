@@ -1,0 +1,8 @@
+{"timestamp": "2026-04-27T18:11:39.671220+00:00", "image_hash": "e45ce5caacef", "prediction": "NORMAL", "confidence": 65.86, "uncertainty": 4.21, "severity": "NORMAL", "total_ms": 9902.1}
+{"timestamp": "2026-04-27T18:12:33.881687+00:00", "image_hash": "001fec54db9c", "prediction": "PNEUMONIA", "confidence": 60.1, "uncertainty": 7.52, "severity": "MILD", "total_ms": 8110.2}
+{"timestamp": "2026-04-27T18:15:18.071642+00:00", "image_hash": "001fec54db9c", "prediction": "PNEUMONIA", "confidence": 62.11, "uncertainty": 6.82, "severity": "MILD", "total_ms": 8333.6}
+{"timestamp": "2026-04-27T18:18:10.947746+00:00", "image_hash": "144dccb01ba6", "prediction": "PNEUMONIA", "confidence": 70.05, "uncertainty": 7.22, "severity": "MODERATE", "total_ms": 10659.7}
+{"timestamp": "2026-04-27T18:18:38.619348+00:00", "image_hash": "3c02d9b70cc1", "prediction": "NORMAL", "confidence": 66.8, "uncertainty": 4.92, "severity": "NORMAL", "total_ms": 10847.0}
+{"timestamp": "2026-04-27T18:19:03.903868+00:00", "image_hash": "51def586f0a3", "prediction": "PNEUMONIA", "confidence": 56.94, "uncertainty": 7.28, "severity": "MILD", "total_ms": 9917.1}
+{"timestamp": "2026-04-27T18:20:33.333564+00:00", "image_hash": "001fec54db9c", "prediction": "PNEUMONIA", "confidence": 62.7, "uncertainty": 6.21, "severity": "MILD", "total_ms": 9225.5}
+{"timestamp": "2026-04-27T18:21:11.448539+00:00", "image_hash": "e45ce5caacef", "prediction": "NORMAL", "confidence": 66.18, "uncertainty": 3.63, "severity": "NORMAL", "total_ms": 8274.5}
