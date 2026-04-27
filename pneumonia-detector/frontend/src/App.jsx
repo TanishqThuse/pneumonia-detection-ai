@@ -3,6 +3,8 @@ import './index.css';
 import Chatbot from './Chatbot';
 import DiagnoseResult from './DiagnoseResult';
 import RiskSurvey from './RiskSurvey';
+import HistoryPanel from './HistoryPanel';
+import MetricsDashboard from './MetricsDashboard';
 
 const API = 'http://localhost:8000';
 
@@ -35,18 +37,18 @@ function Navbar({ onNav, page }) {
           background:'linear-gradient(135deg,#00d4ff,#7c3aed)',
           WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>PneumoAI</span>
       </button>
-      <div style={{ display:'flex', gap:6, alignItems:'center' }}>
-        {[['landing','🏠 Home'],['diagnose','🔬 Diagnose'],['risk','🩺 Risk & Medicines']].map(([p, label]) => (
+      <div style={{ display:'flex', gap:6, alignItems:'center', flexWrap:'wrap' }}>
+        {[['landing','🏠'],['diagnose','🔬 Diagnose'],['risk','🩺 Risk'],['history','📋 History'],['metrics','📊 Metrics']].map(([p, label]) => (
           <button key={p} onClick={() => onNav(p)} style={{
-            padding:'7px 16px', borderRadius:8, border:'none', cursor:'pointer',
+            padding:'7px 14px', borderRadius:8, border:'none', cursor:'pointer',
             background: page===p ? 'rgba(0,212,255,0.12)' : 'transparent',
             color: page===p ? '#00d4ff' : 'rgba(255,255,255,0.5)',
             fontWeight:600, fontSize:13, transition:'all 0.2s', whiteSpace:'nowrap' }}>
             {label}
           </button>
         ))}
-        <button className="btn-primary" style={{ padding:'8px 20px', fontSize:13 }}
-          onClick={() => onNav('diagnose')}>Start Diagnosis</button>
+        <button className="btn-primary" style={{ padding:'8px 18px', fontSize:13 }}
+          onClick={() => onNav('diagnose')}>Diagnose</button>
       </div>
     </nav>
   );
@@ -311,13 +313,38 @@ function DiagnosePage({ onResultChange }) {
 export default function App() {
   const [page,   setPage]   = useState('landing');
   const [result, setResult] = useState(null);
+
+  // Expose feedback handler to DiagnoseResult's buttons via window
+  useEffect(() => {
+    window._pneumoFeedback = async (action) => {
+      if (!result) return;
+      try {
+        await fetch('http://localhost:8000/feedback', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image_hash: 'session',
+            prediction: result.prediction,
+            agreed: action === 'agree',
+          }),
+        });
+        alert(action === 'agree'
+          ? '✅ Thank you! Your confirmation helps the model stay accurate.'
+          : '⚠️ Feedback recorded. This scan has been flagged for expert review.');
+      } catch { alert('Could not send feedback — is the server running?'); }
+    };
+    return () => { delete window._pneumoFeedback; };
+  }, [result]);
+
   return (
     <div style={{ minHeight:'100vh', background:'var(--bg)' }}>
       <Orbs/>
       <Navbar onNav={setPage} page={page}/>
-      {page === 'landing'  && <LandingPage  onStart={() => setPage('diagnose')}/>}
-      {page === 'diagnose' && <DiagnosePage onResultChange={setResult}/>}
-      {page === 'risk'     && <RiskSurvey   lastPrediction={result?.prediction}/>}
+      {page === 'landing'  && <LandingPage     onStart={() => setPage('diagnose')}/>}
+      {page === 'diagnose' && <DiagnosePage    onResultChange={setResult}/>}
+      {page === 'risk'     && <RiskSurvey      lastPrediction={result?.prediction}/>}
+      {page === 'history'  && <HistoryPanel    newResult={null}/>}
+      {page === 'metrics'  && <MetricsDashboard/>}
       <Chatbot result={result}/>
     </div>
   );

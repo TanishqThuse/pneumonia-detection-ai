@@ -60,7 +60,7 @@ export default function DiagnoseResult({ result }) {
       marginTop:24 }}>
 
       {/* Verdict row */}
-      <div style={{ display:'flex', alignItems:'center', gap:16, marginBottom:22, flexWrap:'wrap' }}>
+      <div style={{ display:'flex', alignItems:'center', gap:16, marginBottom:14, flexWrap:'wrap' }}>
         <div style={{ width:54, height:54, borderRadius:14, flexShrink:0,
           background: p ? 'rgba(239,68,68,0.15)' : 'rgba(34,197,94,0.15)',
           display:'flex', alignItems:'center', justifyContent:'center', fontSize:28 }}>
@@ -69,15 +69,55 @@ export default function DiagnoseResult({ result }) {
         <div style={{ flex:1 }}>
           <div style={{ fontSize:24, fontWeight:800, color:mainColor }}>{result.prediction}</div>
           <div style={{ color:'rgba(255,255,255,0.5)', fontSize:13, marginTop:2 }}>
-            {conf}% confidence · DenseNet-121 Analysis
+            {conf}% confidence · DenseNet-121 · {result.mc_passes || 25} MC passes
           </div>
         </div>
-        <div style={{ padding:'6px 14px', borderRadius:20, fontWeight:700, fontSize:13,
-          background:`${severity.color}22`, color:severity.color,
-          border:`1px solid ${severity.color}44` }}>
-          {severity.label}
-        </div>
+        {result.severity ? (
+          <div style={{ padding:'6px 14px', borderRadius:20, fontWeight:700, fontSize:13,
+            background:`${result.severity.color}22`, color:result.severity.color,
+            border:`1px solid ${result.severity.color}44` }}>
+            {result.severity.level}
+          </div>
+        ) : (
+          <div style={{ padding:'6px 14px', borderRadius:20, fontWeight:700, fontSize:13,
+            background:`${severity.color}22`, color:severity.color,
+            border:`1px solid ${severity.color}44` }}>
+            {severity.label}
+          </div>
+        )}
       </div>
+
+      {/* Severity action message */}
+      {result.severity && (
+        <div style={{ marginBottom:16, padding:'10px 14px', borderRadius:10, fontSize:13,
+          background:`${result.severity.color}11`, border:`1px solid ${result.severity.color}33`,
+          color:result.severity.color, lineHeight:1.6 }}>
+          {result.severity.action}
+        </div>
+      )}
+
+      {/* MC Dropout Uncertainty */}
+      {result.uncertainty !== undefined && (
+        <div style={{ marginBottom:18, padding:'12px 14px', borderRadius:12,
+          background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.08)' }}>
+          <div style={{ display:'flex', justifyContent:'space-between', fontSize:12, marginBottom:8 }}>
+            <span style={{ fontWeight:700 }}>🧮 MC Dropout Uncertainty</span>
+            <span style={{ color: result.certainty==='HIGH' ? '#22c55e' : result.certainty==='MEDIUM' ? '#f59e0b' : '#ef4444',
+              fontWeight:700 }}>
+              {result.certainty} CERTAINTY · ±{result.uncertainty}%
+            </span>
+          </div>
+          <div style={{ height:6, background:'rgba(255,255,255,0.08)', borderRadius:3, overflow:'hidden' }}>
+            <div style={{ height:'100%', width:`${Math.min(result.uncertainty * 5, 100)}%`,
+              borderRadius:3, transition:'width 0.8s ease',
+              background: result.certainty==='HIGH' ? '#22c55e' : result.certainty==='MEDIUM' ? '#f59e0b' : '#ef4444' }}/>
+          </div>
+          <div style={{ fontSize:11, color:'rgba(255,255,255,0.35)', marginTop:6 }}>
+            Computed via 25 stochastic forward passes (Gal & Ghahramani, 2016).
+            {result.certainty === 'LOW' ? ' ⚠️ High uncertainty — recommend specialist review.' : ''}
+          </div>
+        </div>
+      )}
 
       {/* Probability bars */}
       {Object.entries(result.probabilities).map(([label, pct]) => {
@@ -158,6 +198,42 @@ export default function DiagnoseResult({ result }) {
         <strong style={{ color:'#a78bfa' }}>Model Details</strong> · Architecture: DenseNet-121 ·
         Calibration: Temperature Scaling (T=2.5) + Bayesian Prior Correction [log(3)] ·
         Decision threshold: 55% · Input: 224×224 RGB normalised with ImageNet stats
+      </div>
+
+      {/* Timing */}
+      {result.timing && (
+        <div style={{ display:'flex', gap:10, marginBottom:14, flexWrap:'wrap' }}>
+          {[['⚡','Total', result.timing.total_ms],
+            ['🖼️','Preprocess', result.timing.preprocess_ms],
+            ['🧠','Inference', result.timing.inference_ms]].map(([icon,label,ms]) => (
+            <div key={label} style={{ flex:1, minWidth:90, padding:'8px 10px', borderRadius:10, textAlign:'center',
+              background:'rgba(255,255,255,0.03)', border:'1px solid rgba(255,255,255,0.08)' }}>
+              <div style={{ fontSize:10, color:'var(--text-dim)', marginBottom:2 }}>{icon} {label}</div>
+              <div style={{ fontSize:15, fontWeight:700, color:'#00d4ff' }}>{ms}ms</div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Doctor Verification — Active Learning */}
+      <div style={{ marginBottom:14, padding:'14px 16px', borderRadius:12,
+        background:'rgba(124,58,237,0.06)', border:'1px solid rgba(124,58,237,0.2)' }}>
+        <div style={{ fontWeight:700, fontSize:13, marginBottom:10, color:'#a78bfa' }}>🩺 Physician Verification</div>
+        <p style={{ fontSize:12, color:'rgba(255,255,255,0.5)', marginBottom:12 }}>
+          Are you a doctor? Help improve the model by verifying this result.
+        </p>
+        <div style={{ display:'flex', gap:10 }}>
+          <button onClick={() => window._pneumoFeedback?.('agree')} style={{
+            flex:1, padding:'9px', borderRadius:9, border:'1px solid rgba(34,197,94,0.3)',
+            background:'rgba(34,197,94,0.08)', color:'#4ade80', fontWeight:700, fontSize:13, cursor:'pointer' }}>
+            👍 Agree with AI
+          </button>
+          <button onClick={() => window._pneumoFeedback?.('disagree')} style={{
+            flex:1, padding:'9px', borderRadius:9, border:'1px solid rgba(239,68,68,0.3)',
+            background:'rgba(239,68,68,0.08)', color:'#f87171', fontWeight:700, fontSize:13, cursor:'pointer' }}>
+            👎 Disagree
+          </button>
+        </div>
       </div>
 
       {/* Actions */}
